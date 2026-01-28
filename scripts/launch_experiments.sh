@@ -11,7 +11,7 @@
 module load arch/a100
 module load python/3.11.5
 module load cuda/12.8.0
-conda activate rlca
+conda activate criticality
 
 which python3
 python3 --version
