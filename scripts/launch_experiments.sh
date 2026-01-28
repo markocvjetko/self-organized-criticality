@@ -22,7 +22,7 @@ cd "$WORK"/proj/self-organized-criticality
 
 BOARD_SIZE=${BOARD_SIZE:-500}
 INIT_DENSITY=${INIT_DENSITY:-0.5}
-OUTPUT_DIR=${OUTPUT_DIR:-./lustre/fsn1/projects/rech/imi/uix29qp/criticality}
+OUTPUT_DIR=${OUTPUT_DIR:-/lustre/fsn1/projects/rech/imi/uix29qp/criticality}
 
 python3 -m gol_criticality.cli \
     --board-size $BOARD_SIZE \
