@@ -22,12 +22,13 @@ cd "$WORK"/phd/projects/complexity
 
 BOARD_SIZE=${BOARD_SIZE:-500}
 INIT_DENSITY=${INIT_DENSITY:-0.5}
+OUTPUT_DIR=${OUTPUT_DIR:-./lustre/fsn1/projects/rech/imi/uix29qp/criticality}
 
 python3 -m gol_criticality.cli \
     --board-size $BOARD_SIZE \
     --init-density $INIT_DENSITY \
-    --num-warmup 10000 \
-    --num-perturbations 100000 \
-    --num-experiments 10 \
-    --output-dir ./results \
+    --num-warmup 100 \
+    --num-perturbations 1000 \
+    --num-experiments 3 \
+    --output-dir $OUTPUT_DIR \
     --plot
