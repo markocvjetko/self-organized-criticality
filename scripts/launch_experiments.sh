@@ -10,9 +10,6 @@
 
 module purge
 module load cuda/12.8.0
-
-# Initialize conda (adjust path if different)
-source "$HOME/.bashrc"
 conda activate criticality
 
 which python3
