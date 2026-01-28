@@ -10,6 +10,7 @@
 
 module purge
 module load cuda/12.8.0
+module load python/3.11.5
 conda activate criticality
 
 which python3
