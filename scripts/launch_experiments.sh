@@ -3,7 +3,7 @@
 #SBATCH -C v100-32g
 #SBATCH --time=23:59:59
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=20
 #SBATCH -o out_gol_%j
 #SBATCH -e err_gol_%j
 #SBATCH --qos=qos_gpu-t3
