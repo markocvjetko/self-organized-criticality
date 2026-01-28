@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --account=imi@v100
 #SBATCH -C v100-32g
-#SBATCH --time=23:59:59
+#SBATCH --time=8:00:00
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=20
 #SBATCH -o out_gol_%j
