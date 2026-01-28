@@ -9,8 +9,10 @@
 #SBATCH --qos=qos_gpu-t3
 
 module purge
-module load python/3.11.5
 module load cuda/12.8.0
+
+# Initialize conda (adjust path if different)
+source "$HOME/.bashrc"
 conda activate criticality
 
 which python3

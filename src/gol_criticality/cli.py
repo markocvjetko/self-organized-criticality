@@ -3,6 +3,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import List, Optional
 
 import torch
 
@@ -11,7 +12,7 @@ from gol_criticality.experiment import run_perturbation_experiment
 from gol_criticality.utils import generate_experiment_id
 
 
-def parse_args(args: list[str] | None = None) -> argparse.Namespace:
+def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run Game of Life criticality experiments",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -107,7 +108,7 @@ def parse_args(args: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(args)
 
 
-def main(args: list[str] | None = None) -> int:
+def main(args: Optional[List[str]] = None) -> int:
     """Main entry point for CLI."""
     opts = parse_args(args)
 

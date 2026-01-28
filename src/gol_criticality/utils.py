@@ -4,7 +4,7 @@ import json
 import pickle
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, List, Optional
 
 import torch
 
@@ -16,11 +16,11 @@ def compute_state_hash(state: torch.Tensor) -> bytes:
 
 
 def save_results(
-    results: list[dict],
+    results: List[dict],
     output_dir: Path,
     experiment_id: str,
-    config: dict[str, Any],
-    final_state: torch.Tensor | None = None,
+    config: Dict[str, Any],
+    final_state: Optional[torch.Tensor] = None,
 ) -> Path:
     """Save experiment results to JSON and optionally pickle the final state."""
     output_dir = Path(output_dir)

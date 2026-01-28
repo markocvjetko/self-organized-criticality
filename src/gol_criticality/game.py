@@ -1,4 +1,6 @@
 """PyTorch-based Game of Life implementation."""
+from typing import Optional, Tuple, Union
+
 import torch
 import torch.nn.functional as F
 
@@ -8,8 +10,8 @@ class GameOfLife:
 
     def __init__(
         self,
-        board_size: tuple[int, int] = (64, 64),
-        device: torch.device | str = "cuda",
+        board_size: Tuple[int, int] = (64, 64),
+        device: Union[torch.device, str] = "cuda",
         dtype: torch.dtype = torch.float16,
         init_density: float = 0.15,
     ):
@@ -26,7 +28,7 @@ class GameOfLife:
             device=self.device,
         )
 
-    def init_state(self, batch_size: int = 1, init_density: float | None = None) -> torch.Tensor:
+    def init_state(self, batch_size: int = 1, init_density: Optional[float] = None) -> torch.Tensor:
         """Initialize random board state."""
         if init_density is None:
             init_density = self.init_density

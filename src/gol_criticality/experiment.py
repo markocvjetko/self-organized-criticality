@@ -1,6 +1,6 @@
 """Experiment logic for perturbation studies."""
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Dict, List, Optional, Tuple, Union
 
 import torch
 
@@ -11,8 +11,8 @@ from gol_criticality.utils import compute_state_hash, save_results, generate_exp
 def evolve_until_cycle(
     game: GameOfLife,
     initial_state: torch.Tensor,
-    max_steps: int | None = None,
-) -> tuple[int, int, int, int, torch.Tensor]:
+    max_steps: Optional[int] = None,
+) -> Tuple[int, int, int, int, torch.Tensor]:
     """
     Evolve until a cycle is detected.
 
@@ -24,7 +24,7 @@ def evolve_until_cycle(
         final_state: State when cycle was detected
     """
     state = initial_state.clone()
-    state_history: dict[bytes, int] = {}
+    state_history: Dict[bytes, int] = {}
     total_cell_changes = 0
 
     # Track which cells have ever changed
@@ -60,7 +60,7 @@ def evolve_until_cycle(
     return step, total_cell_changes, unique_cells, 0, state
 
 
-def perturb_single_cell(state: torch.Tensor) -> tuple[torch.Tensor, tuple[int, int]]:
+def perturb_single_cell(state: torch.Tensor) -> Tuple[torch.Tensor, Tuple[int, int]]:
     """
     Perturb a single dead cell near living cells.
 
@@ -96,13 +96,13 @@ def run_perturbation_experiment(
     initial_state: torch.Tensor,
     num_warmup_perturbations: int = 0,
     num_perturbations: int = 10000,
-    output_dir: Path | str | None = None,
+    output_dir: Optional[Union[Path, str]] = None,
     save_interval: int = 1000,
-    experiment_id: str | None = None,
-    config: dict | None = None,
+    experiment_id: Optional[str] = None,
+    config: Optional[dict] = None,
     verbose: bool = True,
-    progress_callback: Callable[[int, int, str], None] | None = None,
-) -> tuple[list[dict], torch.Tensor]:
+    progress_callback: Optional[Callable[[int, int, str], None]] = None,
+) -> Tuple[List[dict], torch.Tensor]:
     """
     Run perturbation experiment with optional intermediate saving.
 

@@ -1,18 +1,19 @@
 """Plotting functions for experiment results."""
 import math
 from pathlib import Path
+from typing import Dict, List, Optional
 
 import numpy as np
 import torch
 
 
 def plot_distributions(
-    results_list: list[list[dict]],
+    results_list: List[List[Dict]],
     output_dir: Path,
-    final_states: list[torch.Tensor] | None = None,
+    final_states: Optional[List[torch.Tensor]] = None,
     n_bins: int = 50,
     prefix: str = "experiment",
-) -> list[Path]:
+) -> List[Path]:
     """
     Generate distribution plots from experiment results.
 
