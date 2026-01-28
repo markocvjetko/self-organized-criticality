@@ -23,7 +23,7 @@ cd "$WORK"/proj/self-organized-criticality
 BOARD_SIZE=${BOARD_SIZE:-500}
 NUM_PERTURBATIONS=${NUM_PERTURBATIONS:-100000}
 INIT_DENSITY=${INIT_DENSITY:-0.5}
-OUTPUT_DIR=${OUTPUT_DIR:-/lustre/fsn1/projects/rech/imi/uix29qp/criticality/board_${BOARD_SIZE}}
+OUTPUT_DIR=${OUTPUT_DIR:-/lustre/fsn1/projects/rech/imi/uix29qp/criticality/board_${BOARD_SIZE}_${NUM_PERTURBATIONS}}
 
 python3 -m gol_criticality.cli \
     --board-size $BOARD_SIZE \
@@ -32,5 +32,5 @@ python3 -m gol_criticality.cli \
     --num-perturbations $NUM_PERTURBATIONS \
     --num-experiments 5 \
     --output-dir $OUTPUT_DIR \
-    --experiment-id $BOARD_SIZE \
+    --experiment-id $BOARD_SIZE\_$NUM_PERTURBATIONS \
     --plot
