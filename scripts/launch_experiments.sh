@@ -9,7 +9,6 @@
 #SBATCH --qos=qos_gpu-t3
 
 module purge
-module load arch/a100
 module load python/3.11.5
 module load cuda/12.8.0
 conda activate criticality
