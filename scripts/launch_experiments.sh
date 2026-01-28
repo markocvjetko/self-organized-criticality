@@ -18,7 +18,7 @@ python3 --version
 echo $CONDA_DEFAULT_ENV
 nvidia-smi
 
-cd "$WORK"/proj/complexity
+cd "$WORK"/proj/self-organized-criticality
 
 BOARD_SIZE=${BOARD_SIZE:-500}
 INIT_DENSITY=${INIT_DENSITY:-0.5}

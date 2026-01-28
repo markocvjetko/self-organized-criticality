@@ -3,6 +3,6 @@
 
 for board_size in 100 200; do
     sbatch --export=ALL,BOARD_SIZE=$board_size \
-        scripts/launch_experiments.sh
+        ./launch_experiments.sh
     echo "Submitted: board=$board_size"
 done
