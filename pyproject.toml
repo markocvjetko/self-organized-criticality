@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gol-criticality"
+version = "0.1.0"
+description = "Game of Life criticality experiments"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+dev = [
+    "matplotlib>=3.7",
+    "ipykernel>=6.0",
+]
+
+[project.scripts]
+gol-experiment = "gol_criticality.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gol_criticality"]
