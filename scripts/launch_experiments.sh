@@ -4,8 +4,8 @@
 #SBATCH --time=8:00:00
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=20
-#SBATCH -o out_gol_%j
-#SBATCH -e err_gol_%j
+#SBATCH -o logs/out_gol_%j
+#SBATCH -e logs/err_gol_%j
 #SBATCH --qos=qos_gpu-t3
 
 module purge
