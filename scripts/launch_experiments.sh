@@ -8,6 +8,7 @@
 #SBATCH -e err_gol_%j
 #SBATCH --qos=qos_gpu-t3
 
+module purge
 module load arch/a100
 module load python/3.11.5
 module load cuda/12.8.0
@@ -18,7 +19,7 @@ python3 --version
 echo $CONDA_DEFAULT_ENV
 nvidia-smi
 
-cd "$WORK"/phd/projects/complexity
+cd "$WORK"/proj/complexity
 
 BOARD_SIZE=${BOARD_SIZE:-500}
 INIT_DENSITY=${INIT_DENSITY:-0.5}
