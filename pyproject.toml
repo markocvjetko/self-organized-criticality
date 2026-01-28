@@ -7,7 +7,7 @@ name = "gol-criticality"
 version = "0.1.0"
 description = "Game of Life criticality experiments"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 dependencies = [
     "torch>=2.0",
     "numpy>=1.24",
