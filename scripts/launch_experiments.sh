@@ -27,8 +27,8 @@ OUTPUT_DIR=${OUTPUT_DIR:-/lustre/fsn1/projects/rech/imi/uix29qp/criticality}
 python3 -m gol_criticality.cli \
     --board-size $BOARD_SIZE \
     --init-density $INIT_DENSITY \
-    --num-warmup 100 \
-    --num-perturbations 1000 \
-    --num-experiments 3 \
+    --num-warmup 100000 \
+    --num-perturbations 1000000 \
+    --num-experiments 5 \
     --output-dir $OUTPUT_DIR \
     --plot
