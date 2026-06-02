@@ -22,7 +22,7 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument(
         "--board-size", "-b",
         type=int,
-        default=100,
+        default=300,
         help="Board size (square grid)",
     )
     parser.add_argument(
@@ -30,6 +30,11 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         type=float,
         default=0.5,
         help="Initial cell density (0.0 to 1.0)",
+    )
+    parser.add_argument(
+        "--toroidal", "-t",
+        action="store_true",
+        help="Use toroidal (wrap-around) boundary conditions",
     )
 
     # Experiment parameters
@@ -42,7 +47,7 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument(
         "--num-perturbations", "-n",
         type=int,
-        default=10000,
+        default=1000,
         help="Number of perturbations to record",
     )
     parser.add_argument(
@@ -125,6 +130,7 @@ def main(args: Optional[List[str]] = None) -> int:
     config = {
         "board_size": opts.board_size,
         "init_density": opts.init_density,
+        "toroidal": opts.toroidal,
         "num_warmup": opts.num_warmup,
         "num_perturbations": opts.num_perturbations,
         "num_experiments": opts.num_experiments,
@@ -160,6 +166,7 @@ def main(args: Optional[List[str]] = None) -> int:
             board_size=(opts.board_size, opts.board_size),
             device=opts.device,
             init_density=opts.init_density,
+            toroidal=opts.toroidal,
         )
         initial_state = game.init_state()
 

@@ -1,4 +1,5 @@
 """Experiment logic for perturbation studies."""
+import time
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Tuple, Union
 
@@ -11,23 +12,33 @@ from gol_criticality.utils import compute_state_hash, save_results, generate_exp
 def evolve_until_cycle(
     game: GameOfLife,
     initial_state: torch.Tensor,
+    baseline_state: Optional[torch.Tensor] = None,
     max_steps: Optional[int] = None,
 ) -> Tuple[int, int, int, int, torch.Tensor]:
     """
     Evolve until a cycle is detected.
 
+    Args:
+        game: GameOfLife instance
+        initial_state: The (possibly perturbed) state to evolve
+        baseline_state: If provided, evolve this in parallel and only count
+                       cells that differ from baseline (isolates perturbation effect
+                       from background oscillations like blinkers)
+        max_steps: Maximum steps before giving up
+
     Returns:
         steps_to_cycle: Number of steps until cycle detected
-        total_cell_changes: Sum of cell flips across all steps (counts every flip)
-        unique_cells_affected: Number of cells that changed at least once
+        total_cell_changes: Sum of cells differing from baseline across all steps
+        unique_cells_affected: Number of cells that differed from baseline at least once
         cycle_period: Length of the detected cycle
         final_state: State when cycle was detected
     """
     state = initial_state.clone()
+    baseline = baseline_state.clone() if baseline_state is not None else None
     state_history: Dict[bytes, int] = {}
     total_cell_changes = 0
 
-    # Track which cells have ever changed
+    # Track which cells have ever been affected by the perturbation
     affected_mask = torch.zeros_like(state, dtype=torch.bool)
 
     state_hash = compute_state_hash(state)
@@ -35,17 +46,23 @@ def evolve_until_cycle(
 
     step = 0
     while max_steps is None or step < max_steps:
-        prev_state = state
         state = game.step(state)
+        if baseline is not None:
+            baseline = game.step(baseline)
         step += 1
 
-        # Compute changes this step
-        changed_this_step = (state != prev_state)
-        cell_changes = torch.sum(changed_this_step.to(torch.float32)).item()
-        total_cell_changes += int(cell_changes)
+        # Compute cells affected by perturbation (differ from baseline)
+        if baseline is not None:
+            # Only count cells that differ from what they would be without perturbation
+            differs_from_baseline = (state != baseline)
+            cell_changes = torch.sum(differs_from_baseline.to(torch.float32)).item()
+            affected_mask |= differs_from_baseline
+        else:
+            # Fallback: no baseline, count all changes (legacy behavior)
+            # This path is used for initial convergence where there's no perturbation
+            cell_changes = 0  # No perturbation effect to measure
 
-        # Track unique cells affected
-        affected_mask |= changed_this_step
+        total_cell_changes += int(cell_changes)
 
         state_hash = compute_state_hash(state)
         if state_hash in state_history:
@@ -147,20 +164,21 @@ def run_perturbation_experiment(
             if verbose and (i + 1) % max(1, num_warmup_perturbations // 10) == 0:
                 log(f"  Warmup {i + 1}/{num_warmup_perturbations}")
             perturbed, _ = perturb_single_cell(stable_state)
-            _, _, _, _, stable_state = evolve_until_cycle(game, perturbed)
+            _, _, _, _, stable_state = evolve_until_cycle(game, perturbed, baseline_state=stable_state)
     else:
         log("Phase 2: Skipped (no warmup perturbations)")
 
     # Recording phase
     log(f"Phase 3: Running {num_perturbations} recorded perturbations...")
     results = []
+    start_time = time.perf_counter()
 
     for i in range(num_perturbations):
         if progress_callback:
             progress_callback(i + 1, num_perturbations, "record")
 
         perturbed, (row, col) = perturb_single_cell(stable_state)
-        steps, changes, unique_cells, period, stable_state = evolve_until_cycle(game, perturbed)
+        steps, changes, unique_cells, period, stable_state = evolve_until_cycle(game, perturbed, baseline_state=stable_state)
 
         results.append({
             "steps": steps,
@@ -171,11 +189,18 @@ def run_perturbation_experiment(
         })
 
         if verbose and (i + 1) % max(1, num_perturbations // 10) == 0:
-            log(f"  Perturbation {i + 1}/{num_perturbations}")
+            elapsed = time.perf_counter() - start_time
+            sps = (i + 1) / elapsed if elapsed > 0 else 0.0
+            log(f"  Perturbation {i + 1}/{num_perturbations} | SPS: {sps:.2f}")
 
         # Save intermediate results
         if output_dir and save_interval > 0 and (i + 1) % save_interval == 0:
             save_results(results, output_dir, f"{experiment_id}_checkpoint", config)
+
+    # Log final SPS
+    total_elapsed = time.perf_counter() - start_time
+    final_sps = num_perturbations / total_elapsed if total_elapsed > 0 else 0.0
+    log(f"Phase 3 complete: {num_perturbations} perturbations in {total_elapsed:.2f}s (avg SPS: {final_sps:.2f})")
 
     # Final save
     if output_dir:

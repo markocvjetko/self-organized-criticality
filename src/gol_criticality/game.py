@@ -14,11 +14,13 @@ class GameOfLife:
         device: Union[torch.device, str] = "cuda",
         dtype: torch.dtype = torch.float16,
         init_density: float = 0.15,
+        toroidal: bool = False,
     ):
         self.board_size = board_size
         self.device = torch.device(device) if isinstance(device, str) else device
         self.dtype = dtype
         self.init_density = init_density
+        self.toroidal = toroidal
 
         self.kernel = torch.tensor(
             [[[[1, 1, 1],
@@ -40,7 +42,11 @@ class GameOfLife:
     def step(self, state: torch.Tensor) -> torch.Tensor:
         """Advance simulation by one step."""
         with torch.no_grad():
-            state_padded = F.pad(state, (1, 1, 1, 1), mode='constant', value=0)
+            pad_mode = 'circular' if self.toroidal else 'constant'
+            if self.toroidal:
+                state_padded = F.pad(state, (1, 1, 1, 1), mode=pad_mode)
+            else:
+                state_padded = F.pad(state, (1, 1, 1, 1), mode=pad_mode, value=0)
             neighborhood_sum = F.conv2d(state_padded, self.kernel)
             new_state = torch.zeros_like(state, dtype=self.dtype, device=self.device)
             new_state = torch.where(neighborhood_sum == 3, 1, new_state)
