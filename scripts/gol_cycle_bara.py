@@ -28,7 +28,6 @@ from functools import partial
 
 import jax
 import jax.numpy as jnp
-import imageio.v2 as imageio
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
