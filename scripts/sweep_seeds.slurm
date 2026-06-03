@@ -1,11 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=gol_seed
 #SBATCH --account=imi@v100
-#SBATCH -C v100-32g
 #SBATCH --time=11:59:00
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=10
-#SBATCH --qos=qos_gpu-t3
+##SBATCH --qos=qos_gpu-t3
 #SBATCH -o logs/gol_seed_%A_%a.out
 #SBATCH -e logs/gol_seed_%A_%a.err
 #SBATCH --array=0-99
@@ -29,7 +28,7 @@ cd "$SLURM_SUBMIT_DIR" || exit 1
 
 # --- sweep configuration (override via --export=ALL,VAR=... on sbatch) ---
 SEED_BASE=${SEED_BASE:-0}
-BATCH=${BATCH:-512}
+BATCH=${BATCH:-128}
 DENSITY=${DENSITY:-0.5}
 MINSIZE=${MINSIZE:-10}
 MAXSIZE=${MAXSIZE:-1024}
