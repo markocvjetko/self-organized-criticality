@@ -16,7 +16,6 @@
 # and writes to its own JSON file so parallel tasks never clobber each other.
 
 module purge
-module load cuda/12.8.0
 module load python/3.11.5
 conda activate criticality
 
@@ -30,10 +29,10 @@ cd "$SLURM_SUBMIT_DIR" || exit 1
 
 # --- sweep configuration (override via --export=ALL,VAR=... on sbatch) ---
 SEED_BASE=${SEED_BASE:-0}
-BATCH=${BATCH:-4098}
+BATCH=${BATCH:-512}
 DENSITY=${DENSITY:-0.5}
-MINSIZE=${MINSIZE:-512}
-MAXSIZE=${MAXSIZE:-512}
+MINSIZE=${MINSIZE:-10}
+MAXSIZE=${MAXSIZE:-1024}
 OUTDIR=${OUTDIR:-data}
 
 SEED=$((SEED_BASE + SLURM_ARRAY_TASK_ID))
