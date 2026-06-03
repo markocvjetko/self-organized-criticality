@@ -1,6 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=gol_seed
-#SBATCH --account=imi@v100
+#SBATCH -A imi@v100
+#SBATCH -C v100-16g
 #SBATCH --time=11:59:00
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=10
